@@ -1,0 +1,51 @@
+server:
+  port: 0
+spring:
+  application:
+    name: pay-service
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+      path: /h2
+  jpa:
+    hibernate:
+      ddl-auto: create
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/coffeeorderservice
+    username: root
+    password: '00000000'
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+    instance:
+      instance-id: ${spring.cloud.client.hostname}:${spring.application.instance_id:${random.value}}
+
+logging:
+  level:
+    com.mood.userservice.client: DEBUG
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, refresh, health, metrics
+
+point:
+  pay:
+    status:
+      pending: "PENDING"
+      canceled: "CANCELED"
+      confirmed: "CONFIRMED"
+      rejected: "REJECTED"
+
+kafka:
+  topics:
+    user-to-pay-for-point: "payservice-payment-convey"
+    user-to-db-for-point-log: "userservice-point-status"
+    user-to-db-for-point: "userservice-user-point"
+    pay-to-user-for-pay: "userservice-payment-convey"
